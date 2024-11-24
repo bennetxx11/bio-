@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lernprogramm Biologie</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button.correct {
+      background-color: #4caf50;
+      color: white;
+    }
+    button.wrong {
+      background-color: #f44336;
+      color: white;
+    }
+    .result {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lernprogramm Biologie</h1>
+    <div id="quiz">
+      <p class="question" id="question">Frage erscheint hier</p>
+      <div class="buttons">
+        <button onclick="answer(true)">Wahr</button>
+        <button onclick="answer(false)">Falsch</button>
+      </div>
+      <p class="result" id="result"></p>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { text: "Die Verdauung von Kohlenhydraten beginnt im Mund durch Amylase.", answer: true },
+      { text: "Fette werden im Magen durch Lipasen verdaut.", answer: false },
+      { text: "Proteine werden im Dünndarm in Aminosäuren zerlegt.", answer: true },
+      { text: "Rote Blutkörperchen transportieren Sauerstoff.", answer: true },
+      { text: "Weiße Blutkörperchen transportieren CO2.", answer: false },
+      { text: "Der Gasaustausch findet in den Bronchien statt.", answer: false },
+      { text: "Amylase ist ein Enzym, das Stärke spaltet.", answer: true },
+      { text: "Das Zwerchfell spielt eine Rolle bei der Ein- und Ausatmung.", answer: true },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let wrongQuestions = [];
+
+    function loadQuestion() {
+      const questionElement = document.getElementById('question');
+      const resultElement = document.getElementById('result');
+      
+      // Zeige die nächste Frage oder das Endergebnis
+      if (currentQuestion < questions.length) {
+        questionElement.textContent = questions[currentQuestion].text;
+        resultElement.textContent = '';
+      } else if (wrongQuestions.length > 0) {
+        questions.push(...wrongQuestions);
+        wrongQuestions = [];
+        currentQuestion = 0;
+        loadQuestion();
+      } else {
+        questionElement.textContent = 'Alle Fragen wurden beantwortet!';
+        resultElement.textContent = `Endergebnis: ${score} von ${questions.length} richtig.`;
+        document.querySelector('.buttons').style.display = 'none';
+      }
+    }
+
+    function answer(userAnswer) {
+      const current = questions[currentQuestion];
+      const resultElement = document.getElementById('result');
+      
+      if (userAnswer === current.answer) {
+        score++;
+        resultElement.textContent = 'Richtig!';
+        resultElement.style.color = '#4caf50';
+      } else {
+        resultElement.textContent = 'Falsch!';
+        resultElement.style.color = '#f44336';
+        wrongQuestions.push(current);
+      }
+
+      currentQuestion++;
+      setTimeout(loadQuestion, 1000); // Lade die nächste Frage nach 1 Sekunde
+    }
+
+    // Lade die erste Frage
+    loadQuestion();
+  </script>
+</body>
+</html>
